@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import authRoutes from './routes/auth.routes'
+import projectRoutes from './routes/project.routes'
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ app.get('/health', (req, res) => {
 })
 
 app.use('/api/auth', authRoutes)
+app.use('/api/projects', projectRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
