@@ -6,6 +6,7 @@ import projectRoutes from './routes/project.routes'
 import taskRoutes from './routes/task.routes'
 import subtaskRoutes from './routes/subtask.routes'
 import publicRoutes from './routes/public.routes'
+import statsRoutes from './routes/stats.routes'
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ app.use('/api/projects', projectRoutes)
 app.use('/api/projects/:projectId/tasks', taskRoutes)
 app.use('/api/tasks/:taskId/subtasks', subtaskRoutes)
 app.use('/api/public', publicRoutes)
+app.use('/api/stats', statsRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
