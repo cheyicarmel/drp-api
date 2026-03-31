@@ -14,6 +14,10 @@ export const getPublicProjects = async (req: Request, res: Response): Promise<vo
         githubUrl: true,
         demoUrl: true,
         techStack: true,
+        context: true,
+        imageUrl: true,
+        images: true,
+        githubDisabled: true,
         createdAt: true,
         updatedAt: true
       },

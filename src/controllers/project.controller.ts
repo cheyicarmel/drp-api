@@ -83,7 +83,7 @@ export const createProject = async (req: AuthRequest, res: Response): Promise<vo
 // PATCH /api/projects/:id
 export const updateProject = async (req: AuthRequest, res: Response): Promise<void> => {
   const id = req.params.id as string
-  const { title, description, status, priority, estimatedHours, githubUrl, demoUrl, techStack } = req.body
+  const { title, description, status, priority, estimatedHours, githubUrl, demoUrl, techStack, context, imageUrl, images, githubDisabled } = req.body
 
   try {
     const project = await prisma.project.findFirst({
@@ -105,7 +105,11 @@ export const updateProject = async (req: AuthRequest, res: Response): Promise<vo
         ...(estimatedHours !== undefined && { estimatedHours }),
         ...(githubUrl !== undefined && { githubUrl }),
         ...(demoUrl !== undefined && { demoUrl }),
-        ...(techStack !== undefined && { techStack })
+        ...(techStack !== undefined && { techStack }),
+        ...(context !== undefined && { context }),
+        ...(imageUrl !== undefined && { imageUrl }),
+        ...(images !== undefined && { images }),
+        ...(githubDisabled !== undefined && { githubDisabled }),
       }
     })
 
