@@ -4,22 +4,41 @@ import prisma from '../lib/prisma'
 
 // GET /api/projects
 export const getProjects = async (req: AuthRequest, res: Response): Promise<void> => {
-  const { status, priority } = req.query
-
+  const { status, priority, page, limit } = req.query
+ 
+  const pageNum = Math.max(1, parseInt(page as string) || 1)
+  const limitNum = Math.min(50, Math.max(1, parseInt(limit as string) || 10))
+  const skip = (pageNum - 1) * limitNum
+ 
   try {
-    const projects = await prisma.project.findMany({
-      where: {
-        userId: req.userId,
-        ...(status && { status: status as any }),
-        ...(priority && { priority: priority as any })
-      },
-      orderBy: { updatedAt: 'desc' },
-      include: {
-        _count: { select: { tasks: true } }
+    const where = {
+      userId: req.userId,
+      ...(status && { status: status as any }),
+      ...(priority && { priority: priority as any })
+    }
+ 
+    const [projects, total] = await prisma.$transaction([
+      prisma.project.findMany({
+        where,
+        orderBy: { updatedAt: 'desc' },
+        include: { _count: { select: { tasks: true } } },
+        skip,
+        take: limitNum,
+      }),
+      prisma.project.count({ where })
+    ])
+ 
+    res.json({
+      projects,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum),
+        hasNextPage: pageNum < Math.ceil(total / limitNum),
+        hasPrevPage: pageNum > 1,
       }
     })
-
-    res.json({ projects })
   } catch {
     res.status(500).json({ error: 'Erreur serveur', code: 'SERVER_ERROR' })
   }
