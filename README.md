@@ -29,7 +29,7 @@ Built with **Node.js / Express / TypeScript / Prisma 7 / PostgreSQL**.
 DrP API serves two purposes:
 
 1. **Private back-office** — Full CRUD for projects, tasks and subtasks, protected by JWT authentication.
-2. **Public portfolio endpoint** — Exposes only published projects (`isPublic = true`) to be consumed by an external portfolio without authentication.
+2. **Public portfolio endpoint** — Exposes only published projects to be consumed by an external portfolio.
 
 ---
 
@@ -81,10 +81,10 @@ Server runs on `http://localhost:5000` by default.
 Create a `.env` file at the root of the project:
 
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/drp_db"
-JWT_SECRET="your-long-random-secret-min-32-chars"
+DATABASE_URL=""
+JWT_SECRET=""
 PORT=5000
-ALLOWED_ORIGINS=http://localhost:3000,https://your-frontend.vercel.app
+ALLOWED_ORIGINS=
 
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
@@ -610,14 +610,3 @@ All errors follow a consistent format:
 ---
 
 ## Health Check
-
-```
-GET /health
-```
-
-```json
-{
-  "status": "ok",
-  "message": "DrP API is running"
-}
-```
