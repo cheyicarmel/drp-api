@@ -8,18 +8,24 @@ import subtaskRoutes from './routes/subtask.routes'
 import publicRoutes from './routes/public.routes'
 import statsRoutes from './routes/stats.routes'
 import uploadRoutes from './routes/upload.routes'
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') ?? []
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000
 
-app.use(cors())
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true,
+}))
 app.use(express.json())
-
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', message: 'DrP API is running' })
-})
 
 app.use('/api/auth', authRoutes)
 app.use('/api/projects', projectRoutes)
