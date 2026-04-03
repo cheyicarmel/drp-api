@@ -134,9 +134,9 @@ export const togglePublish = async (req: AuthRequest, res: Response): Promise<vo
     }
 
     if (!project.isPublic) {
-      if (!project.githubUrl || !project.demoUrl || !project.techStack) {
+      if (!project.techStack) {
         res.status(400).json({
-          error: 'githubUrl, demoUrl et techStack sont requis avant de publier',
+          error: 'La stack technique est requise avant de publier',
           code: 'MISSING_PORTFOLIO_FIELDS'
         })
         return
