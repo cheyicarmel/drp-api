@@ -29,7 +29,7 @@ Built with **Node.js / Express / TypeScript / Prisma 7 / PostgreSQL**.
 DrP API serves two purposes:
 
 1. **Private back-office** — Full CRUD for projects, tasks and subtasks, protected by JWT authentication.
-2. **Public portfolio endpoint** — Exposes only published projects to be consumed by an external portfolio.
+2. **Public portfolio endpoint** — Exposes only published projects (`isPublic = true`) to be consumed by an external portfolio without authentication.
 
 ---
 
@@ -84,11 +84,10 @@ Create a `.env` file at the root of the project:
 DATABASE_URL=""
 JWT_SECRET=""
 PORT=5000
-ALLOWED_ORIGINS=
 
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ```
 
 > `.env` is not committed to version control. Never expose these values publicly.
@@ -100,8 +99,7 @@ CLOUDINARY_API_SECRET=your_api_secret
 ### Base URL
 
 ```
-http://localhost:5000/api        # development
-https://your-api.onrender.com/api  # production
+http://localhost:5000/api
 ```
 
 ### Authentication
@@ -536,7 +534,7 @@ Base path: `/api/tasks/:taskId/subtasks`
 
 ### Public
 
-> This endpoint is **not protected**. It is designed to be consumed by the external portfolio without authentication.
+> This endpoint is **not protected**. It is designed to be consumed by an external portfolio without authentication.
 
 #### `GET /api/public/projects`
 Returns all published projects (`isPublic = true`).
@@ -562,24 +560,6 @@ Returns all published projects (`isPublic = true`).
     }
   ]
 }
-```
-
-**Portfolio integration example:**
-```typescript
-// In your portfolio component
-const response = await fetch('https://your-api.onrender.com/api/public/projects')
-const { projects } = await response.json()
-
-// Fields mapping
-project.title          // → title
-project.description    // → description
-project.context        // → context
-project.techStack.split(', ')  // → techs[]
-project.githubUrl      // → github
-project.demoUrl        // → demo
-project.githubDisabled // → githubDisabled
-project.imageUrl       // → image
-project.images.split(',')      // → images[]
 ```
 
 ---
@@ -610,3 +590,14 @@ All errors follow a consistent format:
 ---
 
 ## Health Check
+
+```
+GET /health
+```
+
+```json
+{
+  "status": "ok",
+  "message": "DrP API is running"
+}
+```
